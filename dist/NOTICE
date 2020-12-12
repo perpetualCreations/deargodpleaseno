@@ -1,0 +1,2 @@
+Create a new directory here, as format deargodpleaseno-<version>.
+Copy contents of src to newly created directory. Use dh_make to package the release.
