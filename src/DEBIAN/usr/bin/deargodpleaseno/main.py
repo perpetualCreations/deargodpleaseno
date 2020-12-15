@@ -10,6 +10,8 @@ main.py, does the following:
 """
 
 import argparse
+import subprocess
+from sys import exit as terminate
 
 arguments = argparse.ArgumentParser(description = "Operate deargodpleaseno, use dgpn --help for a list of commands.")
 arguments.add_argument("--install", dest = "install", action = "store_const", const = True, help = "Run install script for deargodpleaseno.")
@@ -22,4 +24,29 @@ arguments.add_argument("--bestbefore", dest = "expire", type = int, help = "Spec
 arguments.add_argument("--update", dest = "update", action = "store_const", const = True, help = "Check Github repository for new releases. Packages are not released into the main Debian repository.")
 parameters = arguments.parse_args()
 
-
+if parameters.install is True:
+    print("Called install.")
+    subprocess.Popen("python install.py", shell = True)
+    terminate(0)
+elif parameters.uninstall is True:
+    print("Called uninstall.")
+    subprocess.Popen("python uninstall.py", shell = True)
+    terminate(0)
+elif parameters.update is True:
+    print("Called update check.")
+    subprocess.Popen("python update.py", shell = True)
+elif parameters.scan is True:
+    print("Started scan for new items in dgpn's directory under webroot.")
+    subprocess.Popen("python scan.py", shell = True)
+elif parameters.expire is not None:
+    if parameters.edit is not None:
+        print("Edited item expiry time.")
+        # TODO XML edit
+    pass
+elif paramters.add is not None:
+    print("Added item.")
+    # TODO XML append
+elif parameters.remove is not None:
+    input("**This is a destructive action, the item will be deleted! Press enter to continue, otherwise press Ctrl+C.**")
+    # TODO XML edit
+pass
