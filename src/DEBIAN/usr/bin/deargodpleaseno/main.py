@@ -8,7 +8,7 @@ main.py, does the following:
 - run uninstall
  - remove deargodpleaseno directory from webroot
  - remove entry for deargodpleaseno under robots.txt TODO for future release
- - make sure all items are removed TODO do this before final release
+ - make sure all items are removed
 - add and remove items from deargodpleaseno's managed folder
 - edit items from deargodpleaseno's managed folder
 """
@@ -53,6 +53,15 @@ elif parameters.uninstall is True:
     pass
     input("**This is a destructive action, " + webroot + "/deargodpleaseno/" + " will be deleted along with its contents! Press enter to continue, otherwise press Ctrl+C.**")
     rmtree(webroot + "/deargodpleaseno/")
+    with open("/etc/deargodpleaseno/entries") as fetch:
+        if fetch.read() != "":
+            while index <= len(fetch.read().split("\n")):
+                call("sudo atrm " + fetch.read().split("\n")[index].split("|||")[0], shell=True)
+                index += 1
+            pass
+        pass
+        index = 0
+    pass
     print("Uninstall complete.")
     terminate(0)
 else:
@@ -79,6 +88,7 @@ else:
                     regenerated = fetch.read().split("\n")
                     regenerated.remove(fetch.read().split("\n")[index].split("|||")[0] + "|||" + fetch.read().split("\n")[index].split("|||")[1])
                 pass
+                index += 1
             pass
         pass
         remove("/etc/deargodpleaseno/entries")
@@ -109,6 +119,7 @@ else:
                     regenerated = fetch.read().split("\n")
                     regenerated.remove(fetch.read().split("\n")[index].split("|||")[0] + "|||" + fetch.read().split("\n")[index].split("|||")[1])
                 pass
+                index += 1
             pass
         pass
         remove("/etc/deargodpleaseno/entries")
