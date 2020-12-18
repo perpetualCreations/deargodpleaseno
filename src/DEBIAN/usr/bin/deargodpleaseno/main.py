@@ -11,17 +11,17 @@ main.py, does the following:
  - make sure all items are removed TODO do this before final release
 - add and remove items from deargodpleaseno's managed folder
 - edit items from deargodpleaseno's managed folder
-
-TODO add safety checks, optimize imports, modularize into functions
 """
 
-import argparse
-import subprocess
+from argparse import ArgumentParser
+from subprocess import call
 import configparser
 from os import remove
 from os import mkdir
 from shutil import rmtree
 from sys import exit as terminate
+from os.path import isdir
+from os.path import isfile
 
 arguments = argparse.ArgumentParser(description = "Operate deargodpleaseno, use dgpn --help for a list of commands.")
 arguments.add_argument("--install", dest = "install", action = "store_const", const = True, help = "Install deargodpleaseno.")
@@ -31,12 +31,6 @@ arguments.add_argument("--edit", dest = "edit", type = str, help = "Edit expiry 
 arguments.add_argument("--remove", dest = "remove", type = str, help = "Removes item from atq for deletion, by specif.")
 arguments.add_argument("--bestbefore", dest = "expire", type = int, help = "Specify hours until expiry, optional for --add and required for --edit.")
 parameters = arguments.parse_args()
-
-if arguments.expire is None:
-    config_fetch = configparser.ConfigParser
-    config_fetch.read("/etc/deargodpleaseno/settings.cfg")
-    arguments.expire = config_fetch["expire"]["time"]
-pass
 
 if parameters.install is True:
     webroot = input("Enter webroot: ")
@@ -61,13 +55,27 @@ elif parameters.uninstall is True:
     rmtree(webroot + "/deargodpleaseno/")
     print("Uninstall complete.")
     terminate(0)
-elif parameters.expire is not None:
-    if parameters.edit is not None:
+else:
+    if arguments.expire is None:
+        config_fetch = configparser.ConfigParser
+        config_fetch.read("/etc/deargodpleaseno/settings.cfg")
+        arguments.expire = config_fetch["expire"]["time"]
+    elif arguments.add is not None and isdir(arguments.add) is False and isfile(arguments.add) is False:
+        raise SyntaxError("Item path was not specified!")
+    elif arguments.edit is not None and isdir(arguments.edit) is False and isfile(arguments.edit) is False:
+        raise SyntaxError("Item path was not specified!")
+    elif arguments.edit is not None and arguments.expire is None:
+        raise SyntaxError("User requested item expiry edit, however no expiry time was specified! Use --bestbefore to specify one.")
+    elif arguments.remove is not None and isdir(arguments.remove) is False and isfile(arguments.remove) is False:
+        raise SyntaxError("Item path was not specified!")
+    elif arguments.add is None and arguments.edit is None and arguments.remove is None:
+        raise SyntaxError("No action was specified. Use --add, --edit, or --remove to specify one, remember to type in the item path after the parameter.")
+    elif parameters.edit is not None:
         with open("/etc/deargodpleaseno/entries") as fetch:
             index = 0
             while index <= len(fetch.read().split("\n")):
                 if fetch.read().split("\n")[index].split("|||")[1] == parameters.edit:
-                    subprocess.call("sudo atrm " + fetch.read().split("\n")[index].split("|||")[0])
+                    call("sudo atrm " + fetch.read().split("\n")[index].split("|||")[0], shell = True)
                     regenerated = fetch.read().split("\n")
                     regenerated.remove(fetch.read().split("\n")[index].split("|||")[0] + "|||" + fetch.read().split("\n")[index].split("|||")[1])
                 pass
@@ -78,33 +86,36 @@ elif parameters.expire is not None:
             rebuild.writelines(regenerated)
         pass
         capture = None
-        subprocess.call("sudo rm -r " + parameters.expire + " | at now + " + str(arguments.expire) + " hours", shell = True, stdout = capture)
+        call("sudo rm -r " + parameters.expire + " | at now + " + str(arguments.expire) + " hours", shell = True, stdout = capture)
         with open("/etc/deargodpleaseno/entries", "w") as dump:
             dump.write(capture.split("\n")[1].split()[1] + "|||" + parameters.expire)
         pass
         print("Edited item expiry time.")
-    pass
-elif paramters.add is not None:
-    capture = None
-    subprocess.call("sudo rm -r " + parameters.add + " | at now + " + str(arguments.expire) + " hours", shell = True, stdout = capture)
-    with open("/etc/deargodpleaseno/entries", "w") as dump:
-        dump.write(capture.split("\n")[1].split()[1] + "|||" + parameters.add)
-    pass
-    print("Added item.")
-elif parameters.remove is not None:
-    with open("/etc/deargodpleaseno/entries") as fetch:
-        index = 0
-        while index <= len(fetch.read().split("\n")):
-            if fetch.read().split("\n")[index].split("|||")[1] == parameters.remove:
-                subprocess.call("sudo atrm " + fetch.read().split("\n")[index].split("|||")[0])
-                regenerated = fetch.read().split("\n")
-                regenerated.remove(fetch.read().split("\n")[index].split("|||")[0] + "|||" + fetch.read().split("\n")[index].split("|||")[1])
+        terminate(0)
+    elif paramters.add is not None:
+        capture = None
+        call("sudo rm -r " + parameters.add + " | at now + " + str(arguments.expire) + " hours", shell = True, stdout = capture)
+        with open("/etc/deargodpleaseno/entries", "w") as dump:
+            dump.write(capture.split("\n")[1].split()[1] + "|||" + parameters.add)
+        pass
+        print("Added item.")
+        terminate(0)
+    elif parameters.remove is not None:
+        with open("/etc/deargodpleaseno/entries") as fetch:
+            index = 0
+            while index <= len(fetch.read().split("\n")):
+                if fetch.read().split("\n")[index].split("|||")[1] == parameters.remove:
+                    call("sudo atrm " + fetch.read().split("\n")[index].split("|||")[0], shell = True)
+                    regenerated = fetch.read().split("\n")
+                    regenerated.remove(fetch.read().split("\n")[index].split("|||")[0] + "|||" + fetch.read().split("\n")[index].split("|||")[1])
+                pass
             pass
         pass
+        remove("/etc/deargodpleaseno/entries")
+        with open("/etc/deargodpleaseno/entries", "w") as rebuild:
+            rebuild.writelines(regenerated)
+        pass
+        print("Removed item.")
+        terminate(0)
     pass
-    remove("/etc/deargodpleaseno/entries")
-    with open("/etc/deargodpleaseno/entries", "w") as rebuild:
-        rebuild.writelines(regenerated)
-    pass
-    print("Removed item.")
 pass
