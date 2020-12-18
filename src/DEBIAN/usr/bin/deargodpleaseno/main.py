@@ -2,16 +2,25 @@
 deargodpleaseno, revision 1.0
 
 main.py, does the following:
-- run install.py and uninstall.py
+- run install
+ - if not already existing, creates deargodpleaseno directory in webroot
+ - edits or generates robots.txt to disable obeying user-agents from viewing deargodpleaseno's directory
+- run uninstall
+ - remove deargodpleaseno directory from webroot
+ - remove entry for deargodpleaseno under robots.txt TODO for future release
+ - make sure all items are removed TODO do this before final release
 - add and remove items from deargodpleaseno's managed folder
 - edit items from deargodpleaseno's managed folder
 
-TODO add safety checks, optimize imports, modularize into functions, merge install and uninstall into this file
+TODO add safety checks, optimize imports, modularize into functions
 """
 
 import argparse
 import subprocess
+import configparser
 from os import remove
+from os import mkdir
+from shutil import rmtree
 from sys import exit as terminate
 
 arguments = argparse.ArgumentParser(description = "Operate deargodpleaseno, use dgpn --help for a list of commands.")
@@ -23,13 +32,34 @@ arguments.add_argument("--remove", dest = "remove", type = str, help = "Removes 
 arguments.add_argument("--bestbefore", dest = "expire", type = int, help = "Specify hours until expiry, optional for --add and required for --edit.")
 parameters = arguments.parse_args()
 
+if arguments.expire is None:
+    config_fetch = configparser.ConfigParser
+    config_fetch.read("/etc/deargodpleaseno/settings.cfg")
+    arguments.expire = config_fetch["expire"]["time"]
+pass
+
 if parameters.install is True:
-    print("Called install.")
-    subprocess.Popen("python install.py", shell = True)
+    webroot = input("Enter webroot: ")
+    try:
+        mkdir(webroot + "/deargodpleaseno")
+    except FileExistsError:
+        pass
+    pass
+    with open(webroot, "w") as edit_user_agent_rules:
+        edit_user_agent_rules.write("User-agent: *\nDisallow: /deargodpleaseno/")
+    pass
+    with open("/etc/deargodpleaseno/webroot", "w") as dump_webroot:
+        dump_webroot.write(webroot)
+    pass
+    print("Install complete.")
     terminate(0)
 elif parameters.uninstall is True:
-    print("Called uninstall.")
-    subprocess.Popen("python uninstall.py", shell = True)
+    with open("/etc/deargodpleaseno/webroot") as get_webroot:
+        webroot = get_webroot.readline(0)
+    pass
+    input("**This is a destructive action, " + webroot + "/deargodpleaseno/" + " will be deleted along with its contents! Press enter to continue, otherwise press Ctrl+C.**")
+    rmtree(webroot + "/deargodpleaseno/")
+    print("Uninstall complete.")
     terminate(0)
 elif parameters.expire is not None:
     if parameters.edit is not None:
