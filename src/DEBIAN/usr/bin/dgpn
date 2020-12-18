@@ -1,1 +1,1 @@
-python main.py
+python3 /usr/bin/deargodpleaseno/main.py $1 $2
