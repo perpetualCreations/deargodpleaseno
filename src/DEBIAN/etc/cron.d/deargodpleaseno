@@ -1,7 +1,0 @@
-# /etc/cron.d/deargodpleaseno: dgpn crontab
-# Do not manually edit.
-
-SHELL=/bin/sh
-PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-
-0 * * * * dgpn --scan  >/dev/null 2>&1

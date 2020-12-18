@@ -37,12 +37,12 @@ elif parameters.scan is True:
 elif parameters.expire is not None:
     if parameters.edit is not None:
         print("Edited item expiry time.")
-        # TODO XML edit
+        # TODO AT edit
     pass
 elif paramters.add is not None:
     print("Added item.")
-    # TODO XML append
+    # TODO AT append
 elif parameters.remove is not None:
     input("**This is a destructive action, the item will be deleted! Press enter to continue, otherwise press Ctrl+C.**")
-    # TODO XML edit
+    # TODO AT edit
 pass
