@@ -20,8 +20,7 @@ arguments.add_argument("--scan", dest = "scan", action = "store_const", const = 
 arguments.add_argument("--add", dest = "add", type = str, help = "Add item to deargodpleaseno directory under webroot, by specifying path. If --bestbefore is not used in conjunction, default expiry time will be assumed.")
 arguments.add_argument("--edit", dest = "edit", type = str, help = "Edit expiry time for item in deargodpleaseno directory under webroot, by specifying path. Requires specified new expiry, use --bestbefore.")
 arguments.add_argument("--remove", dest = "remove", type = str, help = "Remove item from deargodpleaseno directory under webroot, by specifying path. This is a destructive action, the item will be deleted! If a directory is specified, any files and subdirectories under it will be deleted.")
-arguments.add_argument("--bestbefore", dest = "expire", type = int, help = "Specify minutes until expiry, optional for --add and required for --edit.")
-arguments.add_argument("--update", dest = "update", action = "store_const", const = True, help = "Check Github repository for new releases. Packages are not released into the main Debian repository.")
+arguments.add_argument("--bestbefore", dest = "expire", type = int, help = "Specify hours until expiry, optional for --add and required for --edit.")
 parameters = arguments.parse_args()
 
 if parameters.install is True:
@@ -32,9 +31,6 @@ elif parameters.uninstall is True:
     print("Called uninstall.")
     subprocess.Popen("python uninstall.py", shell = True)
     terminate(0)
-elif parameters.update is True:
-    print("Called update check.")
-    subprocess.Popen("python update.py", shell = True)
 elif parameters.scan is True:
     print("Started scan for new items in dgpn's directory under webroot.")
     subprocess.Popen("python scan.py", shell = True)
