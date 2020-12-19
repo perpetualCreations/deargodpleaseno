@@ -1,1 +1,1 @@
-python3 /usr/bin/deargodpleaseno/main.py $1 $2
+python3 /usr/share/deargodpleaseno/main.py $1 $2

@@ -82,13 +82,18 @@ else:
     elif parameters.edit is not None:
         with open("/etc/deargodpleaseno/entries") as fetch:
             index = 0
+            found = False
             while index <= len(fetch.read().split("\n")):
                 if fetch.read().split("\n")[index].split("|||")[1] == parameters.edit:
+                    found = True
                     call("sudo atrm " + fetch.read().split("\n")[index].split("|||")[0], shell = True)
                     regenerated = fetch.read().split("\n")
                     regenerated.remove(fetch.read().split("\n")[index].split("|||")[0] + "|||" + fetch.read().split("\n")[index].split("|||")[1])
                 pass
                 index += 1
+            pass
+            if found is False:
+                raise FileNotFoundError("Item was not found in entries!")
             pass
         pass
         remove("/etc/deargodpleaseno/entries")
