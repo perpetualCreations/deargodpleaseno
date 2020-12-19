@@ -6,7 +6,9 @@ Intended for Apache web server owners who want to host a temporary page or file 
 A more up-to-date version of the documentation below is available at [dreamerslegacy.xyz](https://dreamerslegacy.xyz/projects/deargodpleaseno/docs.html).
 
 ## Install and Uninstall
-deargodpleaseno is for Debian and Debian-based operating systems, running Apache. 
+deargodpleaseno is for Ubuntu systems, running Apache. 
+
+Debian and other Debian-based systems can be used, however install with ignoring dependencies. Afterwards, install Python3 and Apache2.
 
 Add the PPA hosting the Debian package.
 ```commandline
