@@ -29,6 +29,11 @@ Then fully remove the package.
 sudo apt remove deargodpleaseno
 ```
 
+Purge configurations and other installed files.
+```commandline
+sudo apt purge deargodpleaseno
+```
+
 If there are no additional packages from the PPA you need or are installed, you can remove it.
 ```commandline
 sudo add-apt-repository --remove ppa:ppa.dreamerslegacy.xyz
