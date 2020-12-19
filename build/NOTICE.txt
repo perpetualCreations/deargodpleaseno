@@ -1,4 +1,4 @@
-1. Copy contents of src to build under the deargodpleaseno directory.
+1. Run prepare_build.sh under root repository directory.
 
 2. Run build.sh. 
 
