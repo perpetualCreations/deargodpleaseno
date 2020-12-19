@@ -1,0 +1,11 @@
+1. Copy contents of src to build under the deargodpleaseno directory.
+
+2. Run build.sh. 
+
+3. Notice how it works flawlessly. /s
+
+4. Run sudo debsign --sign=origin -k <GPG KEY NAME> <DEB PACKAGE FILE>
+
+5. ???
+
+6. Profit! Forward the Debian package to dist directory and the PPA.
