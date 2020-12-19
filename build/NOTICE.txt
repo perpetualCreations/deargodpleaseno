@@ -2,9 +2,13 @@
 
 2. Run build.sh. 
 
-3. Notice how it works flawlessly. /s
+3a. Notice how it works flawlessly. /s
 
-4. Run sudo debsign --sign=origin -k <GPG KEY NAME> <DEB PACKAGE FILE>
+3b. Realize that dpkg-deb --build does not name the version and platform of the package.
+
+3c. Rename the newly generated package to <packagename>_<version>_all.deb.
+
+4. Run sudo debsigs --sign=origin -k <GPG KEY NAME> <DEB PACKAGE FILE>
 
 5. ???
 
