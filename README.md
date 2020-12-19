@@ -1,12 +1,38 @@
 # deargodpleaseno (dgpn)
 Command-line tool for automatically deleting files, webpages, and directories.
 
-Intended for web server owners who want to host a temporary page or file that will deleted after a specified amount of time.
+Intended for Apache web server owners who want to host a temporary page or file that will deleted after a specified amount of time.
 
 A more up-to-date version of the documentation below is available at [dreamerslegacy.xyz](https://dreamerslegacy.xyz/projects/deargodpleaseno/docs.html).
 
-## Install
-Add PPA DETAILS HERE
+## Install and Uninstall
+deargodpleaseno is for Debian and Debian-based operating systems, running Apache. 
+
+Add the PPA hosting the Debian package.
+```commandline
+sudo add-apt-repository ppa:ppa.dreamerslegacy.xyz
+```
+
+Install package from PPA. `apt update` is required to retrieve package lists from the PPA.
+```commandline
+sudo apt update && sudo apt install deargodpleaseno
+```
+
+To uninstall,
+```commandline
+sudo dgpn --uninstall
+```
+Careful, this will remove the generated directory under the webroot, including any files and directories under the generated directory.  See below for more details.
+
+Then fully remove the package.
+```commandline
+sudo apt remove deargodpleaseno
+```
+
+If there are no additional packages from the PPA you need or are installed, you can remove it.
+```commandline
+sudo add-apt-repository --remove ppa:ppa.dreamerslegacy.xyz
+```
 
 ## How to Use
 Move a file or directory under the deargodpleaseno directory in the webroot.
