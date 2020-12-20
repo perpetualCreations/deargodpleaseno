@@ -66,7 +66,7 @@ elif parameters.uninstall is True:
     terminate(0)
 else:
     if parameters.expire is None:
-        config_fetch = configparser.ConfigParser
+        config_fetch = configparser.ConfigParser()
         config_fetch.read("/etc/deargodpleaseno/settings.cfg")
         parameters.expire = config_fetch["expire"]["time"]
     elif parameters.add is not None and isdir(parameters.add) is False and isfile(parameters.add) is False:
