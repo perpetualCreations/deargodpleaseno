@@ -8,11 +8,13 @@ A more up-to-date version of the documentation below is available at [dreamersle
 ## Install and Uninstall
 deargodpleaseno is for Ubuntu systems, running Apache. 
 
-Debian and other Debian-based systems can be used, however install with ignoring dependencies. Afterwards, install Python3 and Apache2.
+Debian and other Debian-based systems will likely be supported later, you can try manually downloading the Debian package from the dist directory, and upon installing ignoring dependencies, installing them afterwards.
 
 Add the PPA hosting the Debian package.
 ```commandline
-sudo add-apt-repository ppa:ppa.dreamerslegacy.xyz
+sudo curl -s --compressed "https://dreamerslegacy.xyz/ppa/ubuntu/KEY.gpg" | sudo apt-key add -
+sudo curl -s --compressed -o /etc/apt/sources.list.d/dreamerslegacy_ppa.list "https://dreamerslegacy.xyz/ppa/ubuntu/dreamerslegacy_ppa.list"
+sudo apt update
 ```
 
 Install package from PPA. `apt update` is required to retrieve package lists from the PPA.
@@ -38,7 +40,9 @@ sudo apt purge deargodpleaseno
 
 If there are no additional packages from the PPA you need or are installed, you can remove it.
 ```commandline
-sudo add-apt-repository --remove ppa:ppa.dreamerslegacy.xyz
+sudo apt-key del 9BBEC5D61BBD56C2CCC437D2A4891A46DC4C3713
+sudo rm /etc/apt/sources.list.d/dreamerslegacy_ppa.list
+sudo apt update
 ```
 
 ## How to Use
