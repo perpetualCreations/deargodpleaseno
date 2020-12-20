@@ -33,11 +33,6 @@ Then fully remove the package.
 sudo apt remove deargodpleaseno
 ```
 
-Purge configurations and other installed files.
-```commandline
-sudo apt purge deargodpleaseno
-```
-
 If there are no additional packages from the PPA you need or are installed, you can remove it.
 ```commandline
 sudo apt-key del 9BBEC5D61BBD56C2CCC437D2A4891A46DC4C3713
