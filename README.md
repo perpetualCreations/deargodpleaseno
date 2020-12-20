@@ -22,6 +22,11 @@ Install package from PPA. `apt update` is required to retrieve package lists fro
 sudo apt update && sudo apt install deargodpleaseno
 ```
 
+Start deargodpleaseno's install script.
+```commandline
+sudo dgpn --install
+```
+
 To uninstall,
 ```commandline
 sudo dgpn --uninstall
