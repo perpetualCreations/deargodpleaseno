@@ -107,7 +107,7 @@ else:
         pass
         print("Edited item expiry time.")
         terminate(0)
-    elif paramters.add is not None:
+    elif parameters.add is not None:
         capture = None
         call("sudo rm -r " + parameters.add + " | at now + " + str(parameters.expire) + " hours", shell = True, stdout = capture)
         with open("/etc/deargodpleaseno/entries", "w") as dump:
