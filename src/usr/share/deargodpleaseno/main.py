@@ -14,7 +14,7 @@ main.py, does the following:
 """
 
 import argparse
-from subprocess import call
+from subprocess import run
 import configparser
 from os import remove
 from os import mkdir
@@ -56,7 +56,7 @@ elif parameters.uninstall is True:
     with open("/etc/deargodpleaseno/entries") as fetch:
         if fetch.read() != "":
             while index <= len(fetch.read().split("\n")):
-                call("sudo atrm " + fetch.read().split("\n")[index].split("|||")[0], shell=True)
+                run("sudo atrm " + fetch.read().split("\n")[index].split("|||")[0], shell = True)
                 index += 1
             pass
         pass
@@ -86,7 +86,7 @@ else:
             while index <= len(fetch.read().split("\n")):
                 if fetch.read().split("\n")[index].split("|||")[1] == parameters.edit:
                     found = True
-                    call("sudo atrm " + fetch.read().split("\n")[index].split("|||")[0], shell = True)
+                    run("sudo atrm " + fetch.read().split("\n")[index].split("|||")[0], shell = True)
                     regenerated = fetch.read().split("\n")
                     regenerated.remove(fetch.read().split("\n")[index].split("|||")[0] + "|||" + fetch.read().split("\n")[index].split("|||")[1])
                 pass
@@ -100,16 +100,14 @@ else:
         with open("/etc/deargodpleaseno/entries", "w") as rebuild:
             rebuild.writelines(regenerated)
         pass
-        capture = None
-        call("sudo rm -r " + parameters.expire + " | at now + " + str(parameters.expire) + " hours", shell = True, stdout = capture)
+        capture = run("sudo rm -r " + parameters.expire + " | at now + " + str(parameters.expire) + " hours", shell = True, capture_output = True).stdout.decode(encoding = "utf-8")
         with open("/etc/deargodpleaseno/entries", "w") as dump:
             dump.write(capture.split("\n")[1].split()[1] + "|||" + parameters.expire)
         pass
         print("Edited item expiry time.")
         terminate(0)
     elif parameters.add is not None:
-        capture = None
-        call("sudo rm -r " + parameters.add + " | at now + " + str(parameters.expire) + " hours", shell = True, stdout = capture)
+        capture = run("sudo rm -r " + parameters.add + " | at now + " + str(parameters.expire) + " hours", shell = True, capture_output = True).stdout.decode(encoding = "utf-8")
         with open("/etc/deargodpleaseno/entries", "w") as dump:
             dump.write(capture.split("\n")[1].split()[1] + "|||" + parameters.add)
         pass
@@ -120,7 +118,7 @@ else:
             index = 0
             while index <= len(fetch.read().split("\n")):
                 if fetch.read().split("\n")[index].split("|||")[1] == parameters.remove:
-                    call("sudo atrm " + fetch.read().split("\n")[index].split("|||")[0], shell = True)
+                    run("sudo atrm " + fetch.read().split("\n")[index].split("|||")[0], shell = True)
                     regenerated = fetch.read().split("\n")
                     regenerated.remove(fetch.read().split("\n")[index].split("|||")[0] + "|||" + fetch.read().split("\n")[index].split("|||")[1])
                 pass
