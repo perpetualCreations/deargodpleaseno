@@ -13,7 +13,7 @@ main.py, does the following:
 - edit items from deargodpleaseno's managed folder
 """
 
-from argparse import ArgumentParser
+import argparse
 from subprocess import call
 import configparser
 from os import remove
