@@ -70,13 +70,13 @@ else:
         config_fetch.read("/etc/deargodpleaseno/settings.cfg")
         parameters.expire = config_fetch["expire"]["time"]
     elif parameters.add is not None and isdir(parameters.add) is False and isfile(parameters.add) is False:
-        raise SyntaxError("Item path was not specified!")
+        raise SyntaxError("Item path is invalid!")
     elif parameters.edit is not None and isdir(parameters.edit) is False and isfile(parameters.edit) is False:
-        raise SyntaxError("Item path was not specified!")
+        raise SyntaxError("Item path is invalid!")
     elif parameters.edit is not None and parameters.expire is None:
         raise SyntaxError("User requested item expiry edit, however no expiry time was specified! Use --bestbefore to specify one.")
     elif parameters.remove is not None and isdir(parameters.remove) is False and isfile(parameters.remove) is False:
-        raise SyntaxError("Item path was not specified!")
+        raise SyntaxError("Item path is invalid!")
     elif parameters.add is None and parameters.edit is None and parameters.remove is None:
         raise SyntaxError("No action was specified. Use --add, --edit, or --remove to specify one, remember to type in the item path after the parameter.")
     elif parameters.edit is not None:
@@ -100,16 +100,16 @@ else:
         with open("/etc/deargodpleaseno/entries", "w") as rebuild:
             rebuild.writelines(regenerated)
         pass
-        capture = run("sudo rm -r " + parameters.expire + " | at now + " + str(parameters.expire) + " hours", shell = True, capture_output = True).stdout.decode(encoding = "utf-8")
+        capture = run("sudo rm -r " + parameters.expire + " | at now + " + str(parameters.expire) + " hours", shell = True, capture_output = True).stderr.decode(encoding = "utf-8")
         with open("/etc/deargodpleaseno/entries", "w") as dump:
-            dump.write(capture.split("\n")[1].split()[1] + "|||" + parameters.expire)
+            dump.write(capture.split("\n")[2].split()[1] + "|||" + parameters.expire)
         pass
         print("Edited item expiry time.")
         terminate(0)
     elif parameters.add is not None:
-        capture = run("sudo rm -r " + parameters.add + " | at now + " + str(parameters.expire) + " hours", shell = True, capture_output = True).stdout.decode(encoding = "utf-8")
+        capture = run("sudo rm -r " + parameters.add + " | at now + " + str(parameters.expire) + " hours", shell = True, capture_output = True).stderr.decode(encoding = "utf-8")
         with open("/etc/deargodpleaseno/entries", "w") as dump:
-            dump.write(capture.split("\n")[1].split()[1] + "|||" + parameters.add)
+            dump.write(capture.split("\n")[2].split()[1] + "|||" + parameters.add)
         pass
         print("Added item.")
         terminate(0)
