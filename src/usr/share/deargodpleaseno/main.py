@@ -131,7 +131,9 @@ else:
         print("remove was executed?")
         with open("/etc/deargodpleaseno/entries") as fetch:
             index = 0
+            print("i passed through here once")
             while index <= len(fetch.read().split("\n")):
+                print("another")
                 if fetch.read().split("\n")[index].split("|||")[1] == parameters.remove:
                     run("sudo atrm " + fetch.read().split("\n")[index].split("|||")[0], shell = True)
                     regenerated = fetch.read().split("\n")
