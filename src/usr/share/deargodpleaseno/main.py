@@ -32,6 +32,15 @@ arguments.add_argument("--remove", dest = "remove", type = str, help = "Removes 
 arguments.add_argument("--bestbefore", dest = "expire", type = int, help = "Specify hours until expiry, optional for --add and required for --edit.")
 parameters = arguments.parse_args()
 
+print("==input arguments==")
+print(install)
+print(uninstall)
+print(add)
+print(edit)
+print(remove)
+print(expire)
+print("==end of arguments==")
+
 if parameters.install is True:
     webroot = input("Enter webroot: ")
     try:
