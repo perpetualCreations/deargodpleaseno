@@ -13,8 +13,6 @@ main.py, does the following:
 - edit items from deargodpleaseno's managed folder
 """
 
-print("test, if you can read this, output is being redirected to console.")
-
 import argparse
 from subprocess import run
 import configparser
@@ -120,6 +118,7 @@ else:
         print("Added item.")
         terminate(0)
     elif parameters.remove is not None:
+        print("remove was executed?")
         with open("/etc/deargodpleaseno/entries") as fetch:
             index = 0
             while index <= len(fetch.read().split("\n")):
