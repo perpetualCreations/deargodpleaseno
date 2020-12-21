@@ -69,6 +69,8 @@ else:
         config_fetch = configparser.ConfigParser()
         config_fetch.read("/etc/deargodpleaseno/settings.cfg")
         parameters.expire = config_fetch["expire"]["time"]
+    elif parameters.add == "/" or parameters.edit == "/":
+        raise Exception("Target item was root.")
     elif parameters.add is not None and isdir(parameters.add) is False and isfile(parameters.add) is False:
         raise SyntaxError("Item path is invalid!")
     elif parameters.edit is not None and isdir(parameters.edit) is False and isfile(parameters.edit) is False:
@@ -100,16 +102,16 @@ else:
         with open("/etc/deargodpleaseno/entries", "w") as rebuild:
             rebuild.writelines(regenerated)
         pass
-        capture = run("sudo rm -r " + parameters.expire + " | at now + " + str(parameters.expire) + " hours", shell = True, capture_output = True).stderr.decode(encoding = "utf-8")
+        capture = run("sudo at now + " + str(parameters.expire) + " hours <<EOF\n" + "sudo rm -r " + parameters.edit + "\nEOF", shell = True, capture_output = True).stderr.decode(encoding = "utf-8")
         with open("/etc/deargodpleaseno/entries", "w") as dump:
-            dump.write(capture.split("\n")[2].split()[1] + "|||" + parameters.expire)
+            dump.write(capture.split("\n")[1].split()[1] + "|||" + parameters.expire)
         pass
         print("Edited item expiry time.")
         terminate(0)
     elif parameters.add is not None:
-        capture = run("sudo rm -r " + parameters.add + " | at now + " + str(parameters.expire) + " hours", shell = True, capture_output = True).stderr.decode(encoding = "utf-8")
+        capture = run("sudo at now + " + str(parameters.expire) + " hours <<EOF\n" + "sudo rm -r " + parameters.add + "\nEOF", shell = True, capture_output = True).stderr.decode(encoding = "utf-8")
         with open("/etc/deargodpleaseno/entries", "w") as dump:
-            dump.write(capture.split("\n")[2].split()[1] + "|||" + parameters.add)
+            dump.write(capture.split("\n")[1].split()[1] + "|||" + parameters.add)
         pass
         print("Added item.")
         terminate(0)
