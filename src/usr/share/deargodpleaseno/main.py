@@ -33,12 +33,12 @@ arguments.add_argument("--bestbefore", dest = "expire", type = int, help = "Spec
 parameters = arguments.parse_args()
 
 print("==input arguments==")
-print(install)
-print(uninstall)
-print(add)
-print(edit)
-print(remove)
-print(expire)
+print(parameters.install)
+print(parameters.uninstall)
+print(parameters.add)
+print(parameters.edit)
+print(parameters.remove)
+print(parameters.expire)
 print("==end of arguments==")
 
 if parameters.install is True:
