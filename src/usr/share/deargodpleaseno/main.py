@@ -138,6 +138,8 @@ else:
                     regenerated.remove(fetch.read().split("\n")[index].split("|||")[0] + "|||" + fetch.read().split("\n")[index].split("|||")[1])
                 pass
                 index += 1
+                print("current index:")
+                print(index)
             pass
         pass
         remove("/etc/deargodpleaseno/entries")
