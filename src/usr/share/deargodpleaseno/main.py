@@ -48,7 +48,7 @@ if parameters.install is True:
     except FileExistsError:
         pass
     pass
-    with open(webroot, "w") as edit_user_agent_rules:
+    with open(webroot, "a") as edit_user_agent_rules:
         edit_user_agent_rules.write("User-agent: *\nDisallow: /deargodpleaseno/")
     pass
     with open("/etc/deargodpleaseno/webroot", "w") as dump_webroot:
@@ -103,26 +103,24 @@ else:
                     regenerated.remove(fetch.read().split("\n")[index].split("|||")[0] + "|||" + fetch.read().split("\n")[index].split("|||")[1])
                 pass
                 index += 1
-                print("On index.")
-                print(index)
             pass
             if found is False:
                 raise FileNotFoundError("Item was not found in entries!")
             pass
         pass
         remove("/etc/deargodpleaseno/entries")
-        with open("/etc/deargodpleaseno/entries", "w") as rebuild:
+        with open("/etc/deargodpleaseno/entries", "a") as rebuild:
             rebuild.writelines(regenerated)
         pass
         capture = run("sudo at now + " + str(parameters.expire) + " hours <<EOF\n" + "sudo rm -r " + parameters.edit + "\nEOF", shell = True, capture_output = True).stderr.decode(encoding = "utf-8")
-        with open("/etc/deargodpleaseno/entries", "w") as dump:
+        with open("/etc/deargodpleaseno/entries", "a") as dump:
             dump.write(capture.split("\n")[1].split()[1] + "|||" + parameters.expire)
         pass
         print("Edited item expiry time.")
         terminate(0)
     elif parameters.add is not None:
         capture = run("sudo at now + " + str(parameters.expire) + " hours <<EOF\n" + "sudo rm -r " + parameters.add + "\nEOF", shell = True, capture_output = True).stderr.decode(encoding = "utf-8")
-        with open("/etc/deargodpleaseno/entries", "w") as dump:
+        with open("/etc/deargodpleaseno/entries", "a") as dump:
             dump.write(capture.split("\n")[1].split()[1] + "|||" + parameters.add)
         pass
         print("Added item.")
@@ -145,7 +143,7 @@ else:
             pass
         pass
         remove("/etc/deargodpleaseno/entries")
-        with open("/etc/deargodpleaseno/entries", "w") as rebuild:
+        with open("/etc/deargodpleaseno/entries", "a") as rebuild:
             rebuild.writelines(regenerated)
         pass
         print("Removed item.")
