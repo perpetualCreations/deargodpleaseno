@@ -78,7 +78,8 @@ else:
         config_fetch = configparser.ConfigParser()
         config_fetch.read("/etc/deargodpleaseno/settings.cfg")
         parameters.expire = config_fetch["expire"]["time"]
-    elif parameters.add == "/" or parameters.edit == "/":
+    pass
+    if parameters.add == "/" or parameters.edit == "/":
         raise Exception("Target item was root.")
     elif parameters.add is not None and isdir(parameters.add) is False and isfile(parameters.add) is False:
         raise SyntaxError("Item path is invalid!")
