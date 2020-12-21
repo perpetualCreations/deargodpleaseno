@@ -13,6 +13,8 @@ main.py, does the following:
 - edit items from deargodpleaseno's managed folder
 """
 
+print("test, if you can read this, output is being redirected to console.")
+
 import argparse
 from subprocess import run
 import configparser
@@ -93,6 +95,8 @@ else:
                     regenerated.remove(fetch.read().split("\n")[index].split("|||")[0] + "|||" + fetch.read().split("\n")[index].split("|||")[1])
                 pass
                 index += 1
+                print("On index.")
+                print(index)
             pass
             if found is False:
                 raise FileNotFoundError("Item was not found in entries!")
