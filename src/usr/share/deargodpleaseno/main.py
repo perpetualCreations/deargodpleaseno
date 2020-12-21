@@ -132,6 +132,10 @@ else:
             print("i passed through here once")
             while index <= len(fetch.read().split("\n")):
                 print("another")
+                print("dump contents:")
+                print(fetch.read())
+                print(fetch.read().split("\n"))
+                print("end of dump.")
                 if fetch.read().split("\n")[index].split("|||")[1] == parameters.remove:
                     run("sudo atrm " + fetch.read().split("\n")[index].split("|||")[0], shell = True)
                     regenerated = fetch.read().split("\n")
