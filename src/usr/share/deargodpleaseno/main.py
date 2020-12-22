@@ -80,11 +80,14 @@ else:
     elif parameters.remove is not None and isdir(parameters.remove) is False and isfile(parameters.remove) is False: raise SyntaxError("Item path is invalid!")
     elif parameters.add is None and parameters.edit is None and parameters.remove is None: raise SyntaxError("No action was specified. Use --add, --edit, or --remove to specify one, remember to type in the item path after the parameter.")
     elif parameters.edit is not None:
+        print("edit was executed!")
         with open("/etc/deargodpleaseno/entries") as fetch: entries = fetch.read()
         index = 0
         while index <= len(entries.split("\n")):
+            print("recursion!")
             try:
                 if entries.split("\n")[index].split("|||")[1] == parameters.edit:
+                    print("target found!")
                     run("sudo atrm " + entries.split("\n")[index].split("|||")[0], shell = True)
                     regenerated = entries.split("\n")
                     regenerated.remove(entries.split("\n")[index].split("|||")[0] + "|||" + entries.split("\n")[index].split("|||")[1])
