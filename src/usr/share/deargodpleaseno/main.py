@@ -31,15 +31,6 @@ arguments.add_argument("--remove", dest = "remove", type = str, help = "Removes 
 arguments.add_argument("--bestbefore", dest = "expire", type = int, help = "Specify hours until expiry, optional for --add and required for --edit.")
 parameters = arguments.parse_args()
 
-print("==input arguments==")
-print(parameters.install)
-print(parameters.uninstall)
-print(parameters.add)
-print(parameters.edit)
-print(parameters.remove)
-print(parameters.expire)
-print("==end of arguments==")
-
 if parameters.install is True:
     webroot = input("Enter webroot: ")
     try:
@@ -77,18 +68,14 @@ else:
     elif parameters.edit is not None:
         if isdir(parameters.edit) is False and isfile(parameters.edit) is False: raise SyntaxError("Item path is invalid!")
         elif parameters.expire is None: raise SyntaxError("User requested item expiry edit, however no expiry time was specified! Use --bestbefore to specify one.")
-        print("edit was executed!")
         with open("/etc/deargodpleaseno/entries") as fetch: entries = fetch.read()
         index = 0
         while index <= len(entries.split("\n")):
-            print("recursion!")
             try:
                 if entries.split("\n")[index].split("|||")[1] == parameters.edit:
-                    print("target found!")
                     run("sudo atrm " + entries.split("\n")[index].split("|||")[0], shell = True)
                     regenerated = entries.split("\n")
                     regenerated.remove(entries.split("\n")[index].split("|||")[0] + "|||" + entries.split("\n")[index].split("|||")[1])
-                    print(regenerated)
                     with open("/etc/deargodpleaseno/entries", "w") as rebuild: rebuild.writelines(regenerated)
                 pass
             except IndexError: pass
@@ -114,7 +101,6 @@ else:
                     run("sudo atrm " + entries.split("\n")[index].split("|||")[0], shell = True)
                     regenerated = entries.split("\n")
                     regenerated.remove(entries.split("\n")[index].split("|||")[0] + "|||" + entries.split("\n")[index].split("|||")[1])
-                    print(regenerated)
                     with open("/etc/deargodpleaseno/entries", "w") as rebuild: rebuild.writelines(regenerated)
                 pass
             except IndexError: pass
