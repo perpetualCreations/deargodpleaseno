@@ -111,16 +111,16 @@ else:
         with open("/etc/deargodpleaseno/entries") as fetch: entries = fetch.read()
         index = 0
         print("i passed through here once")
-        while index <= len(fetch.read().split("\n")):
+        while index <= len(entries.split("\n")):
             print("another")
             print("dump contents:")
-            print(fetch.read())
-            print(fetch.read().split("\n"))
+            print(entries)
+            print(entries.split("\n"))
             print("end of dump.")
-            if fetch.read().split("\n")[index].split("|||")[1] == parameters.remove:
-                run("sudo atrm " + fetch.read().split("\n")[index].split("|||")[0], shell = True)
-                regenerated = fetch.read().split("\n")
-                regenerated.remove(fetch.read().split("\n")[index].split("|||")[0] + "|||" + fetch.read().split("\n")[index].split("|||")[1])
+            if entries.split("\n")[index].split("|||")[1] == parameters.remove:
+                run("sudo atrm " + entries.split("\n")[index].split("|||")[0], shell = True)
+                regenerated = entries.split("\n")
+                regenerated.remove(entries.split("\n")[index].split("|||")[0] + "|||" + entries.split("\n")[index].split("|||")[1])
                 with open("/etc/deargodpleaseno/entries", "a") as rebuild: rebuild.writelines(regenerated)
             pass
             index += 1
