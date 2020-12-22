@@ -104,11 +104,13 @@ else:
         print("Edited item expiry time.")
         terminate(0)
     elif parameters.add is not None:
+        print("add somehow got executed.")
         capture = run("sudo at now + " + str(parameters.expire) + " hours <<EOF\n" + "sudo rm -r " + parameters.add + "\nEOF", shell = True, capture_output = True).stderr.decode(encoding = "utf-8")
         with open("/etc/deargodpleaseno/entries", "a") as dump: dump.write("\n" + capture.split("\n")[1].split()[1] + "|||" + parameters.add)
         print("Added item.")
         terminate(0)
     elif parameters.remove is not None:
+        print("remove somehow got executed.")
         with open("/etc/deargodpleaseno/entries") as fetch: entries = fetch.read()
         index = 0
         while index <= len(entries.split("\n")):
