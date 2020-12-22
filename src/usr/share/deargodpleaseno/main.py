@@ -16,7 +16,6 @@ main.py, does the following:
 import argparse
 from subprocess import run
 import configparser
-from os import remove
 from os import mkdir
 from shutil import rmtree
 from sys import exit as terminate
@@ -81,23 +80,20 @@ else:
     elif parameters.remove is not None and isdir(parameters.remove) is False and isfile(parameters.remove) is False: raise SyntaxError("Item path is invalid!")
     elif parameters.add is None and parameters.edit is None and parameters.remove is None: raise SyntaxError("No action was specified. Use --add, --edit, or --remove to specify one, remember to type in the item path after the parameter.")
     elif parameters.edit is not None:
-        # TODO update edit code that is similar to remove
-        with open("/etc/deargodpleaseno/entries") as fetch:
-            index = 0
-            found = False
-            while index <= len(fetch.read().split("\n")):
-                if fetch.read().split("\n")[index].split("|||")[1] == parameters.edit:
-                    found = True
-                    run("sudo atrm " + fetch.read().split("\n")[index].split("|||")[0], shell = True)
-                    regenerated = fetch.read().split("\n")
-                    regenerated.remove(fetch.read().split("\n")[index].split("|||")[0] + "|||" + fetch.read().split("\n")[index].split("|||")[1])
+        with open("/etc/deargodpleaseno/entries") as fetch: entries = fetch.read()
+        index = 0
+        while index <= len(entries.split("\n")):
+            try:
+                if entries.split("\n")[index].split("|||")[1] == parameters.edit:
+                    run("sudo atrm " + entries.split("\n")[index].split("|||")[0], shell = True)
+                    regenerated = entries.split("\n")
+                    regenerated.remove(entries.split("\n")[index].split("|||")[0] + "|||" + entries.split("\n")[index].split("|||")[1])
+                    print(regenerated)
+                    with open("/etc/deargodpleaseno/entries", "w") as rebuild: rebuild.writelines(regenerated)
                 pass
-                index += 1
-            pass
-            if found is False: raise FileNotFoundError("Item was not found in entries!")
+            except IndexError: pass
+            index += 1
         pass
-        remove("/etc/deargodpleaseno/entries")
-        with open("/etc/deargodpleaseno/entries", "w") as rebuild: rebuild.writelines(regenerated)
         capture = run("sudo at now + " + str(parameters.expire) + " hours <<EOF\n" + "sudo rm -r " + parameters.edit + "\nEOF", shell = True, capture_output = True).stderr.decode(encoding = "utf-8")
         with open("/etc/deargodpleaseno/entries", "a") as dump: dump.write("\n" + capture.split("\n")[1].split()[1] + "|||" + parameters.expire)
         print("Edited item expiry time.")
@@ -108,16 +104,9 @@ else:
         print("Added item.")
         terminate(0)
     elif parameters.remove is not None:
-        print("remove was executed?")
         with open("/etc/deargodpleaseno/entries") as fetch: entries = fetch.read()
         index = 0
-        print("i passed through here once")
         while index <= len(entries.split("\n")):
-            print("another")
-            print("dump contents:")
-            print(entries)
-            print(entries.split("\n"))
-            print("end of dump.")
             try:
                 if entries.split("\n")[index].split("|||")[1] == parameters.remove:
                     run("sudo atrm " + entries.split("\n")[index].split("|||")[0], shell = True)
