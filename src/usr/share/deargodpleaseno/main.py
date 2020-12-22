@@ -40,7 +40,7 @@ print(parameters.remove)
 print(parameters.expire)
 print("==end of arguments==")
 
-if parameters.edit is None: print("this shouldnt occur")
+if parameters.edit is not None: print("this should occur")
 
 if parameters.install is True:
     webroot = input("Enter webroot: ")
