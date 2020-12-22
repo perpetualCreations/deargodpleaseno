@@ -123,6 +123,7 @@ else:
                     run("sudo atrm " + entries.split("\n")[index].split("|||")[0], shell = True)
                     regenerated = entries.split("\n")
                     regenerated.remove(entries.split("\n")[index].split("|||")[0] + "|||" + entries.split("\n")[index].split("|||")[1])
+                    print(regenerated)
                     with open("/etc/deargodpleaseno/entries", "a") as rebuild: rebuild.writelines(regenerated)
                 pass
             except IndexError: pass
