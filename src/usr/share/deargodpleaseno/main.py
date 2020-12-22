@@ -40,6 +40,8 @@ print(parameters.remove)
 print(parameters.expire)
 print("==end of arguments==")
 
+if parameters.edit is None: print("this shouldnt occur")
+
 if parameters.install is True:
     webroot = input("Enter webroot: ")
     try:
@@ -104,13 +106,11 @@ else:
         print("Edited item expiry time.")
         terminate(0)
     elif parameters.add is not None:
-        print("add somehow got executed.")
         capture = run("sudo at now + " + str(parameters.expire) + " hours <<EOF\n" + "sudo rm -r " + parameters.add + "\nEOF", shell = True, capture_output = True).stderr.decode(encoding = "utf-8")
         with open("/etc/deargodpleaseno/entries", "a") as dump: dump.write("\n" + capture.split("\n")[1].split()[1] + "|||" + parameters.add)
         print("Added item.")
         terminate(0)
     elif parameters.remove is not None:
-        print("remove somehow got executed.")
         with open("/etc/deargodpleaseno/entries") as fetch: entries = fetch.read()
         index = 0
         while index <= len(entries.split("\n")):
@@ -129,5 +129,3 @@ else:
         terminate(0)
     pass
 pass
-
-print("did everything just get skipped")
