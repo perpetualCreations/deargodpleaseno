@@ -48,28 +48,22 @@ if parameters.install is True:
     except FileExistsError:
         pass
     pass
-    with open(webroot, "a") as edit_user_agent_rules:
-        edit_user_agent_rules.write("User-agent: *\nDisallow: /deargodpleaseno/")
-    pass
-    with open("/etc/deargodpleaseno/webroot", "w") as dump_webroot:
-        dump_webroot.write(webroot)
-    pass
+    with open(webroot, "a") as edit_user_agent_rules: edit_user_agent_rules.write("User-agent: *\nDisallow: /deargodpleaseno/")
+    with open("/etc/deargodpleaseno/webroot", "w") as dump_webroot: dump_webroot.write(webroot)
     print("Install complete.")
     terminate(0)
 elif parameters.uninstall is True:
-    with open("/etc/deargodpleaseno/webroot") as get_webroot:
-        webroot = get_webroot.readline(0)
-    pass
+    with open("/etc/deargodpleaseno/webroot") as get_webroot: webroot = get_webroot.readline(0)
     input("**This is a destructive action, " + webroot + "/deargodpleaseno/" + " will be deleted along with its contents! Press enter to continue, otherwise press Ctrl+C.**")
     rmtree(webroot + "/deargodpleaseno/")
     with open("/etc/deargodpleaseno/entries") as fetch:
         if fetch.read() != "":
+            index = 0
             while index <= len(fetch.read().split("\n")):
                 run("sudo atrm " + fetch.read().split("\n")[index].split("|||")[0], shell = True)
                 index += 1
             pass
         pass
-        index = 0
     pass
     print("Uninstall complete.")
     terminate(0)
@@ -79,18 +73,13 @@ else:
         config_fetch.read("/etc/deargodpleaseno/settings.cfg")
         parameters.expire = config_fetch["expire"]["time"]
     pass
-    if parameters.add == "/" or parameters.edit == "/":
-        raise Exception("Target item was root.")
-    elif parameters.add is not None and isdir(parameters.add) is False and isfile(parameters.add) is False:
-        raise SyntaxError("Item path is invalid!")
-    elif parameters.edit is not None and isdir(parameters.edit) is False and isfile(parameters.edit) is False:
-        raise SyntaxError("Item path is invalid!")
-    elif parameters.edit is not None and parameters.expire is None:
-        raise SyntaxError("User requested item expiry edit, however no expiry time was specified! Use --bestbefore to specify one.")
-    elif parameters.remove is not None and isdir(parameters.remove) is False and isfile(parameters.remove) is False:
-        raise SyntaxError("Item path is invalid!")
-    elif parameters.add is None and parameters.edit is None and parameters.remove is None:
-        raise SyntaxError("No action was specified. Use --add, --edit, or --remove to specify one, remember to type in the item path after the parameter.")
+    if parameters.add == "/" or parameters.edit == "/": raise Exception("Target item was root.")
+    elif parameters.add is not None and isdir(parameters.add) is False and isfile(parameters.add) is False: raise SyntaxError("Item path is invalid!")
+    elif parameters.edit is not None:
+        if isdir(parameters.edit) is False and isfile(parameters.edit) is False: raise SyntaxError("Item path is invalid!")
+        elif parameters.expire is None: raise SyntaxError("User requested item expiry edit, however no expiry time was specified! Use --bestbefore to specify one.")
+    elif parameters.remove is not None and isdir(parameters.remove) is False and isfile(parameters.remove) is False: raise SyntaxError("Item path is invalid!")
+    elif parameters.add is None and parameters.edit is None and parameters.remove is None: raise SyntaxError("No action was specified. Use --add, --edit, or --remove to specify one, remember to type in the item path after the parameter.")
     elif parameters.edit is not None:
         with open("/etc/deargodpleaseno/entries") as fetch:
             index = 0
@@ -104,53 +93,37 @@ else:
                 pass
                 index += 1
             pass
-            if found is False:
-                raise FileNotFoundError("Item was not found in entries!")
-            pass
+            if found is False: raise FileNotFoundError("Item was not found in entries!")
         pass
         remove("/etc/deargodpleaseno/entries")
-        with open("/etc/deargodpleaseno/entries", "a") as rebuild:
-            rebuild.writelines(regenerated)
-        pass
+        with open("/etc/deargodpleaseno/entries", "a") as rebuild: rebuild.writelines(regenerated)
         capture = run("sudo at now + " + str(parameters.expire) + " hours <<EOF\n" + "sudo rm -r " + parameters.edit + "\nEOF", shell = True, capture_output = True).stderr.decode(encoding = "utf-8")
-        with open("/etc/deargodpleaseno/entries", "a") as dump:
-            dump.write(capture.split("\n")[1].split()[1] + "|||" + parameters.expire)
-        pass
+        with open("/etc/deargodpleaseno/entries", "a") as dump: dump.write(capture.split("\n")[1].split()[1] + "|||" + parameters.expire)
         print("Edited item expiry time.")
         terminate(0)
     elif parameters.add is not None:
         capture = run("sudo at now + " + str(parameters.expire) + " hours <<EOF\n" + "sudo rm -r " + parameters.add + "\nEOF", shell = True, capture_output = True).stderr.decode(encoding = "utf-8")
-        with open("/etc/deargodpleaseno/entries", "a") as dump:
-            dump.write(capture.split("\n")[1].split()[1] + "|||" + parameters.add)
-        pass
+        with open("/etc/deargodpleaseno/entries", "a") as dump: dump.write(capture.split("\n")[1].split()[1] + "|||" + parameters.add)
         print("Added item.")
         terminate(0)
     elif parameters.remove is not None:
         print("remove was executed?")
-        with open("/etc/deargodpleaseno/entries") as fetch:
-            print("in case scopes are acting strange")
+        with open("/etc/deargodpleaseno/entries") as fetch: entries = fetch.read()
+        index = 0
+        print("i passed through here once")
+        while index <= len(fetch.read().split("\n")):
+            print("another")
+            print("dump contents:")
             print(fetch.read())
-            index = 0
-            print("i passed through here once")
-            while index <= len(fetch.read().split("\n")):
-                print("another")
-                print("dump contents:")
-                print(fetch.read())
-                print(fetch.read().split("\n"))
-                print("end of dump.")
-                if fetch.read().split("\n")[index].split("|||")[1] == parameters.remove:
-                    run("sudo atrm " + fetch.read().split("\n")[index].split("|||")[0], shell = True)
-                    regenerated = fetch.read().split("\n")
-                    regenerated.remove(fetch.read().split("\n")[index].split("|||")[0] + "|||" + fetch.read().split("\n")[index].split("|||")[1])
-                pass
-                index += 1
-                print("current index:")
-                print(index)
+            print(fetch.read().split("\n"))
+            print("end of dump.")
+            if fetch.read().split("\n")[index].split("|||")[1] == parameters.remove:
+                run("sudo atrm " + fetch.read().split("\n")[index].split("|||")[0], shell = True)
+                regenerated = fetch.read().split("\n")
+                regenerated.remove(fetch.read().split("\n")[index].split("|||")[0] + "|||" + fetch.read().split("\n")[index].split("|||")[1])
+                with open("/etc/deargodpleaseno/entries", "a") as rebuild: rebuild.writelines(regenerated)
             pass
-        pass
-        remove("/etc/deargodpleaseno/entries")
-        with open("/etc/deargodpleaseno/entries", "a") as rebuild:
-            rebuild.writelines(regenerated)
+            index += 1
         pass
         print("Removed item.")
         terminate(0)
