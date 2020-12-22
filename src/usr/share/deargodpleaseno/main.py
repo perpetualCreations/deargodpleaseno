@@ -48,7 +48,7 @@ if parameters.install is True:
     except FileExistsError:
         pass
     pass
-    with open(webroot, "a") as edit_user_agent_rules: edit_user_agent_rules.write("User-agent: *\nDisallow: /deargodpleaseno/")
+    with open(webroot, "a") as edit_user_agent_rules: edit_user_agent_rules.write("\n\nUser-agent: *\nDisallow: /deargodpleaseno/")
     with open("/etc/deargodpleaseno/webroot", "w") as dump_webroot: dump_webroot.write(webroot)
     print("Install complete.")
     terminate(0)
@@ -97,14 +97,14 @@ else:
             if found is False: raise FileNotFoundError("Item was not found in entries!")
         pass
         remove("/etc/deargodpleaseno/entries")
-        with open("/etc/deargodpleaseno/entries", "a") as rebuild: rebuild.writelines(regenerated)
+        with open("/etc/deargodpleaseno/entries", "w") as rebuild: rebuild.writelines(regenerated)
         capture = run("sudo at now + " + str(parameters.expire) + " hours <<EOF\n" + "sudo rm -r " + parameters.edit + "\nEOF", shell = True, capture_output = True).stderr.decode(encoding = "utf-8")
-        with open("/etc/deargodpleaseno/entries", "a") as dump: dump.write(capture.split("\n")[1].split()[1] + "|||" + parameters.expire)
+        with open("/etc/deargodpleaseno/entries", "a") as dump: dump.write("\n" + capture.split("\n")[1].split()[1] + "|||" + parameters.expire)
         print("Edited item expiry time.")
         terminate(0)
     elif parameters.add is not None:
         capture = run("sudo at now + " + str(parameters.expire) + " hours <<EOF\n" + "sudo rm -r " + parameters.add + "\nEOF", shell = True, capture_output = True).stderr.decode(encoding = "utf-8")
-        with open("/etc/deargodpleaseno/entries", "a") as dump: dump.write(capture.split("\n")[1].split()[1] + "|||" + parameters.add)
+        with open("/etc/deargodpleaseno/entries", "a") as dump: dump.write("\n" + capture.split("\n")[1].split()[1] + "|||" + parameters.add)
         print("Added item.")
         terminate(0)
     elif parameters.remove is not None:
@@ -124,7 +124,7 @@ else:
                     regenerated = entries.split("\n")
                     regenerated.remove(entries.split("\n")[index].split("|||")[0] + "|||" + entries.split("\n")[index].split("|||")[1])
                     print(regenerated)
-                    with open("/etc/deargodpleaseno/entries", "a") as rebuild: rebuild.writelines(regenerated)
+                    with open("/etc/deargodpleaseno/entries", "w") as rebuild: rebuild.writelines(regenerated)
                 pass
             except IndexError: pass
             index += 1
