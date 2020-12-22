@@ -67,13 +67,11 @@ elif parameters.uninstall is True:
     print("Uninstall complete.")
     terminate(0)
 else:
-    print("passed install uninstall")
     if parameters.expire is None:
         config_fetch = configparser.ConfigParser()
         config_fetch.read("/etc/deargodpleaseno/settings.cfg")
         parameters.expire = config_fetch["expire"]["time"]
     pass
-    print("passed expire reconfig")
     if parameters.add == "/" or parameters.edit == "/": raise Exception("Target item was root.")
     elif parameters.add is not None and isdir(parameters.add) is False and isfile(parameters.add) is False: raise SyntaxError("Item path is invalid!")
     elif parameters.edit is not None:
@@ -97,7 +95,7 @@ else:
             index += 1
         pass
         capture = run("sudo at now + " + str(parameters.expire) + " hours <<EOF\n" + "sudo rm -r " + parameters.edit + "\nEOF", shell = True, capture_output = True).stderr.decode(encoding = "utf-8")
-        with open("/etc/deargodpleaseno/entries", "a") as dump: dump.write("\n" + capture.split("\n")[1].split()[1] + "|||" + parameters.expire)
+        with open("/etc/deargodpleaseno/entries", "a") as dump: dump.write("\n" + capture.split("\n")[1].split()[1] + "|||" + parameters.edit)
         print("Edited item expiry time.")
         terminate(0)
     elif parameters.remove is not None and isdir(parameters.remove) is False and isfile(parameters.remove) is False: raise SyntaxError("Item path is invalid!")
