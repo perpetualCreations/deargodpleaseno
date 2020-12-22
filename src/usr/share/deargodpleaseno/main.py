@@ -129,3 +129,5 @@ else:
         terminate(0)
     pass
 pass
+
+print("did everything just get skipped")
