@@ -128,6 +128,8 @@ else:
     elif parameters.remove is not None:
         print("remove was executed?")
         with open("/etc/deargodpleaseno/entries") as fetch:
+            print("in case scopes are acting strange")
+            print(fetch.read())
             index = 0
             print("i passed through here once")
             while index <= len(fetch.read().split("\n")):
