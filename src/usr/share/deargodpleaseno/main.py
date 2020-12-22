@@ -79,6 +79,7 @@ else:
     if parameters.add == "/" or parameters.edit == "/": raise Exception("Target item was root.")
     elif parameters.add is not None and isdir(parameters.add) is False and isfile(parameters.add) is False: raise SyntaxError("Item path is invalid!")
     elif parameters.edit is not None:
+        print("will this also trigger?")
         if isdir(parameters.edit) is False and isfile(parameters.edit) is False: raise SyntaxError("Item path is invalid!")
         elif parameters.expire is None: raise SyntaxError("User requested item expiry edit, however no expiry time was specified! Use --bestbefore to specify one.")
     elif parameters.remove is not None and isdir(parameters.remove) is False and isfile(parameters.remove) is False: raise SyntaxError("Item path is invalid!")
