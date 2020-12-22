@@ -81,6 +81,7 @@ else:
     elif parameters.remove is not None and isdir(parameters.remove) is False and isfile(parameters.remove) is False: raise SyntaxError("Item path is invalid!")
     elif parameters.add is None and parameters.edit is None and parameters.remove is None: raise SyntaxError("No action was specified. Use --add, --edit, or --remove to specify one, remember to type in the item path after the parameter.")
     elif parameters.edit is not None:
+        # TODO update edit code that is similar to remove
         with open("/etc/deargodpleaseno/entries") as fetch:
             index = 0
             found = False
@@ -117,12 +118,14 @@ else:
             print(entries)
             print(entries.split("\n"))
             print("end of dump.")
-            if entries.split("\n")[index].split("|||")[1] == parameters.remove:
-                run("sudo atrm " + entries.split("\n")[index].split("|||")[0], shell = True)
-                regenerated = entries.split("\n")
-                regenerated.remove(entries.split("\n")[index].split("|||")[0] + "|||" + entries.split("\n")[index].split("|||")[1])
-                with open("/etc/deargodpleaseno/entries", "a") as rebuild: rebuild.writelines(regenerated)
-            pass
+            try:
+                if entries.split("\n")[index].split("|||")[1] == parameters.remove:
+                    run("sudo atrm " + entries.split("\n")[index].split("|||")[0], shell = True)
+                    regenerated = entries.split("\n")
+                    regenerated.remove(entries.split("\n")[index].split("|||")[0] + "|||" + entries.split("\n")[index].split("|||")[1])
+                    with open("/etc/deargodpleaseno/entries", "a") as rebuild: rebuild.writelines(regenerated)
+                pass
+            except IndexError: pass
             index += 1
         pass
         print("Removed item.")
