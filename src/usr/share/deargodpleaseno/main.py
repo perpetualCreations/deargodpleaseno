@@ -40,8 +40,6 @@ print(parameters.remove)
 print(parameters.expire)
 print("==end of arguments==")
 
-if parameters.edit is not None: print("this should occur")
-
 if parameters.install is True:
     webroot = input("Enter webroot: ")
     try:
@@ -79,12 +77,8 @@ else:
     if parameters.add == "/" or parameters.edit == "/": raise Exception("Target item was root.")
     elif parameters.add is not None and isdir(parameters.add) is False and isfile(parameters.add) is False: raise SyntaxError("Item path is invalid!")
     elif parameters.edit is not None:
-        print("will this also trigger?")
         if isdir(parameters.edit) is False and isfile(parameters.edit) is False: raise SyntaxError("Item path is invalid!")
         elif parameters.expire is None: raise SyntaxError("User requested item expiry edit, however no expiry time was specified! Use --bestbefore to specify one.")
-    elif parameters.remove is not None and isdir(parameters.remove) is False and isfile(parameters.remove) is False: raise SyntaxError("Item path is invalid!")
-    elif parameters.add is None and parameters.edit is None and parameters.remove is None: raise SyntaxError("No action was specified. Use --add, --edit, or --remove to specify one, remember to type in the item path after the parameter.")
-    elif parameters.edit is not None:
         print("edit was executed!")
         with open("/etc/deargodpleaseno/entries") as fetch: entries = fetch.read()
         index = 0
@@ -106,6 +100,8 @@ else:
         with open("/etc/deargodpleaseno/entries", "a") as dump: dump.write("\n" + capture.split("\n")[1].split()[1] + "|||" + parameters.expire)
         print("Edited item expiry time.")
         terminate(0)
+    elif parameters.remove is not None and isdir(parameters.remove) is False and isfile(parameters.remove) is False: raise SyntaxError("Item path is invalid!")
+    elif parameters.add is None and parameters.edit is None and parameters.remove is None: raise SyntaxError("No action was specified. Use --add, --edit, or --remove to specify one, remember to type in the item path after the parameter.")
     elif parameters.add is not None:
         capture = run("sudo at now + " + str(parameters.expire) + " hours <<EOF\n" + "sudo rm -r " + parameters.add + "\nEOF", shell = True, capture_output = True).stderr.decode(encoding = "utf-8")
         with open("/etc/deargodpleaseno/entries", "a") as dump: dump.write("\n" + capture.split("\n")[1].split()[1] + "|||" + parameters.add)
