@@ -90,8 +90,8 @@ It can be used to schedule commands in the future. The example below starts a pa
 .. code-block:: bash
 
    sudo at now + 1 hour
-   at> sudo <span class = "command">apt update &amp;&amp; sudo <span class = "command">apt upgrade -y
-   at> &lt;EOT>
+   at> sudo apt update && sudo apt upgrade -y
+   at> <EOT>
 
 deargodpleaseno can and probably will clog up your atq. Exert caution when removing atjobs.
 To remember which atjobs are responsible for removing which items, an entries files exists under /etc/deargodpleaseno/entries which records items and their atjob number.
@@ -99,7 +99,7 @@ They are formatted as 0|||/var/www/html/deargodpleaseno/itemtobedeleted.html, 0 
 If the entries and queue desync, reinstalling and clearing atq with atrm is the most efficient way of fixing it. Other options such as overwriting entries are possible, but aren't foolproof.
 deargodpleaseno upon install will create its directory under the specified webroot. It will then append:
 
-.. code-block:: plain-text
+.. code-block:: 
 
    User-agent: *
    Disallow: /deargodpleaseno/
